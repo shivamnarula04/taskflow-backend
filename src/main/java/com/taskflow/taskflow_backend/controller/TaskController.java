@@ -24,6 +24,18 @@ public class TaskController {
         return taskRepository.save(task);
     }
 
+    @PutMapping("/{id}")
+    public Task updateTask(@PathVariable Long id, @RequestBody Task updatedTask) {
+        return taskRepository.findById(id).map(task -> {
+            task.setTitle(updatedTask.getTitle());
+            task.setDescription(updatedTask.getDescription());
+            task.setDueDate(updatedTask.getDueDate());
+            task.setPriority(updatedTask.getPriority());
+            task.setCompleted(updatedTask.isCompleted());
+            return taskRepository.save(task);
+        }).orElseThrow(() -> new RuntimeException("Task not found"));
+    }
+
     @DeleteMapping("/{id}")
     public void deleteTask(@PathVariable Long id) {
         taskRepository.deleteById(id);
